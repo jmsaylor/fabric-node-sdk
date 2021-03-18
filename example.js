@@ -8,7 +8,7 @@ const { Gateway, Wallets } = require("fabric-network");
 const fs = require("fs");
 const path = require("path");
 
-async function main(action, payload) {
+async function example(action, payload) {
   try {
     // load the network configuration
     const ccpPath = path.resolve(__dirname, "MiniGwConnection.json");
@@ -86,4 +86,4 @@ async function main(action, payload) {
   }
 }
 
-module.exports.main = main;
+module.exports.example = example;

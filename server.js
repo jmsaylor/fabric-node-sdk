@@ -1,14 +1,14 @@
 const express = require("express");
-const { main } = require("./main");
+const { example } = require("./example");
 const app = express();
 
 const port = 9000;
 
 app.use(express.json());
 
-app.post("/", async (req, res) => {
+app.post("/example", async (req, res) => {
   const { action, payload } = await req.body;
-  const value = await main(action, payload);
+  const value = await example(action, payload);
   console.log("RESPONSE: " + value);
   res.send(value);
 });
