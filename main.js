@@ -8,7 +8,7 @@ const { Gateway, Wallets } = require("fabric-network");
 const fs = require("fs");
 const path = require("path");
 
-async function main() {
+async function main(action, payload) {
   try {
     // load the network configuration
     const ccpPath = path.resolve(__dirname, "MiniGwConnection.json");
@@ -48,16 +48,36 @@ async function main() {
     // Get the contract from the network.
     const contract = network.getContract("simple");
     console.log("check4");
-    // Submit the specified transaction.
-    // await contract.submitTransaction('invoke', 'put', `abc_${randomId}`, `def_${randomId}`);
-    const query = await contract.submitTransaction("query", ["a"]);
 
-    console.log("Transaction has been submitted");
+    let result = "";
 
-    console.log(query.toString());
+    console.log(action);
+    console.log(payload);
+
+    switch (action) {
+      case "QUERY":
+        const { id } = payload;
+        const query = await contract.submitTransaction("query", [id]);
+        result = query.toString();
+        break;
+      case "TRANSFER":
+        const { id_1, id_2, amount } = payload;
+        // const args = Array.from(id_1, id_2, amount);
+        // console.log(args);
+        // console.log(args.length);
+        const ok = await contract.submitTransaction(
+          "invoke",
+          id_1,
+          id_2,
+          amount
+        );
+        if (ok) result = "OK";
+        break;
+      default:
+        result = "Unidentified action";
+    }
     await gateway.disconnect();
-
-    return query;
+    return result;
   } catch (error) {
     console.log(error);
     console.error(`Failed to enroll admin user "admin": ${error}`);
@@ -66,4 +86,4 @@ async function main() {
   }
 }
 
-module.exports.query = main;
+module.exports.main = main;

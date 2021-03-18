@@ -1,12 +1,14 @@
 const express = require("express");
-const { query } = require("./main");
+const { main } = require("./main");
 const app = express();
 
 const port = 9000;
 
+app.use(express.json());
+
 app.post("/", async (req, res) => {
-  const { id } = req;
-  const value = await query();
+  const { action, payload } = await req.body;
+  const value = await main(action, payload);
   console.log("RESPONSE: " + value);
   res.send(value);
 });
